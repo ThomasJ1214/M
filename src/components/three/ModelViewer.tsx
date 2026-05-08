@@ -8,7 +8,7 @@ import {
   PresentationControls,
 } from '@react-three/drei'
 import * as THREE from 'three'
-import { FallbackGeometry } from './FallbackGeometry'
+import { FallbackGeometry, type CarModelType } from './FallbackGeometry'
 import { useIdleDetection } from '@/hooks/useIdleDetection'
 
 interface ModelProps {
@@ -100,6 +100,7 @@ function ModelScene({
   scrollRotation,
   isExploded,
   orbitEnabled,
+  modelType,
   onLoad,
 }: {
   modelPath: string
@@ -107,6 +108,7 @@ function ModelScene({
   scrollRotation: number
   isExploded: boolean
   orbitEnabled: boolean
+  modelType?: CarModelType
   onLoad?: () => void
 }) {
   const [useFallback, setUseFallback] = useState(false)
@@ -123,7 +125,7 @@ function ModelScene({
     return (
       <>
         <group ref={groupRef}>
-          <FallbackGeometry accentColor={paintColor} scrollRotation={scrollRotation} />
+          <FallbackGeometry accentColor={paintColor} scrollRotation={scrollRotation} modelType={modelType} />
         </group>
         {orbitEnabled && <OrbitControls enableZoom={false} enablePan={false} />}
       </>
@@ -134,7 +136,7 @@ function ModelScene({
     <>
       <Suspense fallback={
         <group ref={groupRef}>
-          <FallbackGeometry accentColor={paintColor} scrollRotation={scrollRotation} />
+          <FallbackGeometry accentColor={paintColor} scrollRotation={scrollRotation} modelType={modelType} />
         </group>
       }>
         <GLBModel
@@ -156,6 +158,7 @@ interface ModelViewerProps {
   scrollRotation?: number
   height?: string | number
   interactive?: boolean
+  modelType?: CarModelType
   onScreenshot?: () => void
   className?: string
 }
@@ -166,6 +169,7 @@ export function ModelViewer({
   scrollRotation = 0,
   height = '100%',
   interactive = false,
+  modelType,
   className = '',
 }: ModelViewerProps) {
   const [orbitEnabled, setOrbitEnabled] = useState(false)
@@ -210,7 +214,8 @@ export function ModelViewer({
         ref={canvasRef}
         shadows
         camera={{ position: [0, 1.5, 5], fov: 45 }}
-        gl={{ preserveDrawingBuffer: true, antialias: true, alpha: true }}
+        gl={{ preserveDrawingBuffer: true, antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        dpr={[1, 2]}
         style={{ background: 'transparent' }}
         aria-label="Interactive 3D BMW M car viewer"
       >
@@ -248,6 +253,7 @@ export function ModelViewer({
           scrollRotation={scrollRotation}
           isExploded={isExploded}
           orbitEnabled={orbitEnabled}
+          modelType={modelType}
         />
 
         {/* Invisible ground plane for shadows */}

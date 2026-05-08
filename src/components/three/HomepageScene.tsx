@@ -2,19 +2,21 @@ import { Suspense, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Environment, SpotLight } from '@react-three/drei'
 import * as THREE from 'three'
-import { FallbackGeometry } from './FallbackGeometry'
+import { FallbackGeometry, type CarModelType } from './FallbackGeometry'
 
 interface HomepageSceneProps {
   accentColor: string
   scrollProgress: number
   scaleProgress: number
   opacityProgress: number
+  modelType?: CarModelType
 }
 
-function SceneContent({ accentColor, scrollProgress, scaleProgress }: {
+function SceneContent({ accentColor, scrollProgress, scaleProgress, modelType }: {
   accentColor: string
   scrollProgress: number
   scaleProgress: number
+  modelType?: CarModelType
 }) {
   const groupRef = useRef<THREE.Group>(null)
 
@@ -25,18 +27,19 @@ function SceneContent({ accentColor, scrollProgress, scaleProgress }: {
 
   return (
     <group ref={groupRef} scale={[scaleProgress, scaleProgress, scaleProgress]}>
-      <FallbackGeometry accentColor={accentColor} scrollRotation={scrollProgress} />
+      <FallbackGeometry accentColor={accentColor} scrollRotation={scrollProgress} modelType={modelType} />
     </group>
   )
 }
 
-export function HomepageScene({ accentColor, scrollProgress, scaleProgress, opacityProgress }: HomepageSceneProps) {
+export function HomepageScene({ accentColor, scrollProgress, scaleProgress, opacityProgress, modelType }: HomepageSceneProps) {
   return (
     <div style={{ opacity: opacityProgress, transition: 'opacity 0.1s linear' }} className="w-full h-full">
       <Canvas
         shadows
         camera={{ position: [0, 1.2, 6], fov: 42 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        dpr={[1, 1.5]}
         style={{ background: 'transparent' }}
         aria-label="3D BMW M model"
       >
@@ -59,6 +62,7 @@ export function HomepageScene({ accentColor, scrollProgress, scaleProgress, opac
             accentColor={accentColor}
             scrollProgress={scrollProgress}
             scaleProgress={scaleProgress}
+            modelType={modelType}
           />
         </Suspense>
 

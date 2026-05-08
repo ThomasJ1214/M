@@ -21,6 +21,8 @@ export interface PaintColor {
   metallic?: boolean
 }
 
+export type ModelBodyType = 'sedan' | 'coupe' | 'suv' | 'grancoupe' | 'roadster' | 'default'
+
 export interface BMWModel {
   slug: string
   name: string
@@ -29,6 +31,7 @@ export interface BMWModel {
   tagline: string
   description: string
   accentColor: string
+  bodyType: ModelBodyType
   generations: Generation[]
   colors: PaintColor[]
   relatedSlugs: string[]
@@ -51,6 +54,7 @@ export const models: BMWModel[] = [
     tagline: 'THE ORIGINAL. THE LEGEND.',
     description: 'Born from motorsport necessity, the M1 was BMW\'s first dedicated M car and the only mid-engine production BMW ever built. Penned by Giorgetto Giugiaro and engineered with Paul Rosche\'s legendary M88 straight-six, it defined what BMW M Division could achieve.',
     accentColor: COLORS.mBlue,
+    bodyType: 'roadster',
     featuredGenIndex: 0,
     relatedSlugs: ['m3', 'm4', 'm8'],
     colors: [
@@ -85,6 +89,7 @@ export const models: BMWModel[] = [
     tagline: 'DRIVER\'S MACHINE. PURE.',
     description: 'The spiritual successor to the 1M Coupé and the compact powerhouse of the M lineup. The M2 distills everything essential about the M philosophy into the most driver-focused, analog package in BMW\'s current lineup.',
     accentColor: COLORS.mBlue,
+    bodyType: 'coupe',
     featuredGenIndex: 1,
     relatedSlugs: ['m3', 'm4', 'm1'],
     colors: [
@@ -136,6 +141,7 @@ export const models: BMWModel[] = [
     tagline: 'THE ICON. SIX GENERATIONS OF PERFECTION.',
     description: 'No car in automotive history has captured the imagination of enthusiasts like the BMW M3. Born on the racetrack and refined across six generations, it remains the definitive sports sedan — a car that delivers supercar performance with everyday usability.',
     accentColor: COLORS.mBlue,
+    bodyType: 'sedan',
     featuredGenIndex: 4,
     relatedSlugs: ['m4', 'm2', 'm5'],
     colors: [
@@ -251,6 +257,7 @@ export const models: BMWModel[] = [
     tagline: 'THE COUPE. EVOLVED.',
     description: 'The M4 carries the spiritual DNA of every M3 Coupe that preceded it, now wearing its own identity with pride. With the S58 engine and available Competition xDrive, it storms to 60 mph in under 3.5 seconds while remaining a genuine driver\'s car on a twisting mountain road.',
     accentColor: COLORS.mBlue,
+    bodyType: 'coupe',
     featuredGenIndex: 1,
     relatedSlugs: ['m3', 'm2', 'm8'],
     colors: [
@@ -302,6 +309,7 @@ export const models: BMWModel[] = [
     tagline: 'THE SUPER SEDAN. REIMAGINED EVERY ERA.',
     description: 'The BMW M5 invented the super sedan category and has dominated it for over three decades. From the discreet E28 to the thunderous F90 with its 600+ horsepower and AWD system that can disengage entirely for rear-wheel-drive drift mode, the M5 is always the pinnacle of performance sedan engineering.',
     accentColor: COLORS.mRed,
+    bodyType: 'sedan',
     featuredGenIndex: 4,
     relatedSlugs: ['m3', 'm8', 'x5m'],
     colors: [
@@ -415,6 +423,7 @@ export const models: BMWModel[] = [
     tagline: 'GRAND TOURER. UNCOMPROMISED.',
     description: 'The M6 occupies a unique space in the M lineage — a grand touring car engineered with the precision of a race machine. Where the M3 and M4 are track weapons refined for the road, the M6 devours continents at speed with unshakeable composure.',
     accentColor: COLORS.mBlue,
+    bodyType: 'grancoupe',
     featuredGenIndex: 1,
     relatedSlugs: ['m5', 'm8', 'm4'],
     colors: [
@@ -463,6 +472,7 @@ export const models: BMWModel[] = [
     tagline: 'THE APEX OF M.',
     description: 'The M8 sits at the absolute summit of BMW\'s M portfolio. Bridging the gap between road car and race car with its Competition and CSL variants, the M8 is a 627-horsepower grand tourer that has also won at Le Mans.',
     accentColor: COLORS.mRed,
+    bodyType: 'grancoupe',
     featuredGenIndex: 0,
     relatedSlugs: ['m6', 'm5', 'm4'],
     colors: [
@@ -498,6 +508,7 @@ export const models: BMWModel[] = [
     tagline: 'PERFORMANCE. WITHOUT LIMITS.',
     description: 'The X5 M defies physics. A two-tonne SUV that shatters the 0-60 barrier in under 4 seconds, corners with sports car precision, and tows a trailer with the same casual authority. M Division\'s engineering wizardry at its most audacious.',
     accentColor: COLORS.gunmetal,
+    bodyType: 'suv',
     featuredGenIndex: 1,
     relatedSlugs: ['x6m', 'm5', 'm8'],
     colors: [
@@ -562,6 +573,7 @@ export const models: BMWModel[] = [
     tagline: 'POWER. STYLE. DOMINATION.',
     description: 'The X6 M is the sports activity coupe taken to its absolute performance extreme. Combining the rakish fastback silhouette of the X6 with the full fury of M Division\'s most powerful V8, it turns heads and scorches tarmac in equal measure.',
     accentColor: COLORS.gunmetal,
+    bodyType: 'suv',
     featuredGenIndex: 1,
     relatedSlugs: ['x5m', 'm8', 'm5'],
     colors: [
@@ -610,6 +622,7 @@ export const models: BMWModel[] = [
     tagline: 'COUPE. SPORT. LEICHTBAU.',
     description: 'CSL: three letters that in BMW\'s history always mean the same thing — the absolute pinnacle. The M4 CSL is 550 horsepower, 100 kilograms lighter than the standard M4, with a CFRP roof, carbon ceramic brakes, and a track-tuned suspension that transforms every road into a private circuit.',
     accentColor: COLORS.mRed,
+    bodyType: 'coupe',
     featuredGenIndex: 0,
     relatedSlugs: ['m4', 'm3', 'm8'],
     colors: [
@@ -644,6 +657,7 @@ export const models: BMWModel[] = [
     tagline: 'ELECTRIC. STILL M.',
     description: 'The electrification of M Division marks a new chapter without abandoning its soul. The M5 PHEV hybrid system delivers 727hp combined, while the upcoming fully-electric M models demonstrate that instant torque and M\'s precision handling philosophy can co-exist — and thrive.',
     accentColor: COLORS.mBlue,
+    bodyType: 'sedan',
     featuredGenIndex: 0,
     relatedSlugs: ['m5', 'm3', 'm4'],
     colors: [

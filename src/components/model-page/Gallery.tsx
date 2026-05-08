@@ -141,6 +141,7 @@ function GalleryItem({
           src={src}
           alt={`${modelName} gallery image ${index + 1}`}
           loading="lazy"
+          decoding="async"
           className="w-full block"
           onError={() => setError(true)}
         />

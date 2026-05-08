@@ -34,29 +34,23 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
-          {/* M Logo SVG */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
             className="mb-12"
           >
-            <MLogo size={80} />
+            <MLogo size={72} />
           </motion.div>
 
-          {/* Progress text */}
           <div className="font-mono text-xs tracking-[0.3em] text-white/40 uppercase mb-6">
             Loading M Division
           </div>
 
-          {/* Progress bar */}
           <div className="w-64 h-[3px] bg-white/10 relative overflow-hidden">
             <motion.div
               className="absolute inset-y-0 left-0"
-              style={{
-                background: 'linear-gradient(90deg, #1C69D4, #6B2D8B, #C1001F)',
-                backgroundSize: '200% 100%',
-              }}
+              style={{ background: 'linear-gradient(90deg, #1C69D4, #6B2D8B, #C1001F)' }}
               animate={{ width: `${progress}%` }}
               transition={{ ease: 'easeOut', duration: 0.1 }}
             />
@@ -71,26 +65,30 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
   )
 }
 
+/** Accurate BMW M Division tricolor logo SVG */
 export function MLogo({ size = 60, className = '' }: { size?: number; className?: string }) {
+  const h = Math.round(size * 0.38)
   return (
     <svg
       width={size}
-      height={size * 0.45}
-      viewBox="0 0 200 90"
+      height={h}
+      viewBox="0 0 200 76"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-label="BMW M Division logo"
+      role="img"
     >
-      {/* Left blue segment */}
-      <path d="M0 90 L40 0 L80 90 L60 90 L40 40 L20 90 Z" fill="#1C69D4" />
-      {/* Center purple segment */}
-      <path d="M60 90 L80 40 L100 90 Z" fill="#6B2D8B" />
-      <path d="M100 90 L120 40 L140 90 Z" fill="#6B2D8B" />
-      {/* Right red segment */}
-      <path d="M120 90 L160 0 L200 90 L180 90 L160 40 L140 90 Z" fill="#C1001F" />
-      {/* Center overlap */}
-      <path d="M80 90 L100 40 L120 90 Z" fill="#6B2D8B" opacity="0.8" />
+      {/* Blue — outer left stroke */}
+      <path d="M0,76 L38,0 L64,0 L28,76 Z" fill="#1C69D4" />
+      {/* Blue — inner left diagonal */}
+      <path d="M28,76 L64,0 L86,38 L58,76 Z" fill="#1C69D4" />
+      {/* Purple — center V */}
+      <path d="M58,76 L86,38 L100,0 L114,38 L142,76 Z" fill="#6B2D8B" />
+      {/* Red — inner right diagonal */}
+      <path d="M142,76 L114,38 L136,0 L172,76 Z" fill="#C1001F" />
+      {/* Red — outer right stroke */}
+      <path d="M172,76 L136,0 L162,0 L200,76 Z" fill="#C1001F" />
     </svg>
   )
 }

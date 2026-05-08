@@ -244,6 +244,7 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
             scrollProgress={scrollProgress}
             scaleProgress={scaleProgress}
             opacityProgress={opacityProgress}
+            modelType={model.bodyType}
           />
 
           {/* Model watermark — M1 special */}
@@ -272,6 +273,7 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
             scrollProgress={scrollProgress}
             scaleProgress={scaleProgress}
             opacityProgress={opacityProgress}
+            modelType={model.bodyType}
           />
         </div>
       </div>

@@ -24,6 +24,7 @@ export function InteractiveViewer({ model, generation }: InteractiveViewerProps)
         <ModelViewer
           modelPath={generation.modelPath}
           paintColor={selectedColor.hex}
+          modelType={model.bodyType}
           height="100%"
           interactive={true}
           className="w-full h-full"

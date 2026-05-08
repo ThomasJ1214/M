@@ -1,7 +1,14 @@
 <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" fill="#000"/>
-  <path d="M2 30 L10 2 L16 16 L22 2 L30 30 L26 30 L22 18 L16 30 L10 18 L6 30 Z" fill="none" stroke-width="0"/>
-  <path d="M2 30 L9 4 L16 20 L16 30 Z" fill="#1C69D4"/>
-  <path d="M16 20 L16 30 L23 30 L16 20 Z" fill="#6B2D8B"/>
-  <path d="M16 30 L23 4 L30 30 Z" fill="#C1001F"/>
+  <rect width="32" height="32" rx="4" fill="#000"/>
+  <!-- BMW M tricolor — scaled to 32x32 viewport, viewBox 0 0 200 76 scaled to fit -->
+  <!-- Blue outer left -->
+  <path d="M1,31 L7.6,1 L12.8,1 L6.2,31 Z" fill="#1C69D4"/>
+  <!-- Blue inner left diagonal -->
+  <path d="M6.2,31 L12.8,1 L15.8,14.5 L11.2,31 Z" fill="#1C69D4"/>
+  <!-- Purple center V -->
+  <path d="M11.2,31 L15.8,14.5 L16,1 L16.2,14.5 L20.8,31 Z" fill="#6B2D8B"/>
+  <!-- Red inner right diagonal -->
+  <path d="M20.8,31 L16.2,14.5 L19.2,1 L25.8,31 Z" fill="#C1001F"/>
+  <!-- Red outer right -->
+  <path d="M25.8,31 L19.2,1 L24.4,1 L31,31 Z" fill="#C1001F"/>
 </svg>
