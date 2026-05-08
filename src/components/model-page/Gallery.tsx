@@ -14,12 +14,12 @@ interface GalleryProps {
 // Generate placeholder gallery image paths
 function getGalleryImages(slug: string): string[] {
   return [
-    `/images/${slug}/gallery-1.webp`,
-    `/images/${slug}/gallery-2.webp`,
-    `/images/${slug}/gallery-3.webp`,
-    `/images/${slug}/gallery-4.webp`,
-    `/images/${slug}/gallery-5.webp`,
-    `/images/${slug}/gallery-6.webp`,
+    `/images/${slug}/gallery-1.jpg`,
+    `/images/${slug}/gallery-2.jpg`,
+    `/images/${slug}/gallery-3.jpg`,
+    `/images/${slug}/gallery-4.jpg`,
+    `/images/${slug}/gallery-5.jpg`,
+    `/images/${slug}/gallery-6.jpg`,
   ]
 }
 

@@ -59,7 +59,7 @@ export function GenerationsTimeline({ model, activeGenId, onSelectGeneration }: 
                   }}
                 >
                   <img
-                    src={`${gen.imagePath}/thumb.webp`}
+                    src={`${gen.imagePath}/thumb.jpg`}
                     alt={`${gen.code} ${model.name}`}
                     className="w-full h-full object-cover opacity-60"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}

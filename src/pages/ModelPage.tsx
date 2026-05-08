@@ -43,7 +43,7 @@ export function ModelPage() {
         <meta name="description" content={model.description.slice(0, 160)} />
         <meta property="og:title" content={`${model.fullName} — BMW M Showcase`} />
         <meta property="og:description" content={model.description.slice(0, 200)} />
-        <meta property="og:image" content={`/images/${model.slug}/hero.webp`} />
+        <meta property="og:image" content={`/images/${model.slug}/hero.jpg`} />
         <meta property="og:type" content="article" />
       </Helmet>
 

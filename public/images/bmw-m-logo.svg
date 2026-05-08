@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 80" role="img" aria-label="BMW M Division Logo">
+  <!-- Blue left M shape -->
+  <path d="M0,80 L35,0 L55,45 L75,0 L110,80 L88,80 L75,48 L55,80 Z" fill="#1C69D4"/>
+  <!-- Overlap / center blend -->
+  <path d="M55,80 L75,48 L88,80 Z" fill="#4B2A7F"/>
+  <!-- Purple center bridge -->
+  <path d="M55,48 L75,0 L88,48 Z" fill="#6B2D8B"/>
+  <!-- Red right M shape -->
+  <path d="M110,80 L145,0 L165,45 L185,0 L220,80 L198,80 L185,48 L165,80 Z" fill="#C1001F"/>
+  <!-- Overlap / blend -->
+  <path d="M165,80 L185,48 L198,80 Z" fill="#8B1020"/>
+  <!-- Purple center bridge right -->
+  <path d="M145,48 L165,0 L178,48 Z" fill="#6B2D8B"/>
+  <!-- Center connecting M bar -->
+  <path d="M88,80 L110,20 L132,80 Z" fill="#6B2D8B"/>
+</svg>

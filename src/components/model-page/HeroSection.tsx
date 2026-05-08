@@ -27,7 +27,7 @@ export function HeroSection({ model }: HeroSectionProps) {
         style={{ y }}
       >
         <img
-          src={`/images/${model.slug}/hero.webp`}
+          src={`/images/${model.slug}/hero.jpg`}
           alt={`${model.fullName} - ${featuredGen.years}`}
           className="w-full h-full object-cover opacity-40"
           loading="eager"

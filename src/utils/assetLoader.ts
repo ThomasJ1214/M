@@ -17,5 +17,5 @@ export function getImagePath(slug: string, filename: string): string {
 }
 
 export function getHeroImage(slug: string): string {
-  return `/images/${slug}/hero.webp`
+  return `/images/${slug}/hero.jpg`
 }
