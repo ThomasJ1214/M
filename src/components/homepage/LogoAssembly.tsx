@@ -4,30 +4,32 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// M logo fragment paths — each is a slice of the tricolor M
+// Each fragment is one of the 5 BMW M tricolor strokes, split into scatter pieces
 const FRAGMENTS = [
-  // Blue side — left M
-  { d: 'M0 90 L20 45', color: '#1C69D4', x: -500, y: -300, rot: -160 },
-  { d: 'M20 45 L40 0', color: '#1C69D4', x: -300, y: 400, rot: 120 },
-  { d: 'M40 0 L60 45', color: '#1C69D4', x: 600, y: -200, rot: -90 },
-  { d: 'M60 45 L80 90', color: '#1C69D4', x: -700, y: 200, rot: 150 },
-  // Purple center
-  { d: 'M60 90 L80 40 L100 90', color: '#6B2D8B', x: 400, y: -500, rot: -130 },
-  { d: 'M100 90 L120 40 L140 90', color: '#6B2D8B', x: -200, y: 600, rot: 80 },
-  { d: 'M80 90 L100 40 L120 90', color: '#6B2D8B', x: 700, y: 300, rot: -70 },
-  // Red side — right M
-  { d: 'M120 90 L140 45', color: '#C1001F', x: 300, y: -400, rot: 110 },
-  { d: 'M140 45 L160 0', color: '#C1001F', x: -600, y: -300, rot: -140 },
-  { d: 'M160 0 L180 45', color: '#C1001F', x: 500, y: 500, rot: 60 },
-  { d: 'M180 45 L200 90', color: '#C1001F', x: -400, y: 350, rot: -100 },
-  // Base line
-  { d: 'M0 90 L200 90', color: '#4A4A4A', x: 0, y: 800, rot: 0 },
+  // Blue — outer left
+  { d: 'M0,76 L19,38', color: '#1C69D4', x: -520, y: -280, rot: -155 },
+  { d: 'M19,38 L38,0 L64,0', color: '#1C69D4', x: -280, y: 380, rot: 110 },
+  { d: 'M64,0 L46,38 L28,76', color: '#1C69D4', x: 560, y: -210, rot: -85 },
+  // Blue — inner left
+  { d: 'M28,76 L64,0', color: '#1C69D4', x: -680, y: 190, rot: 145 },
+  { d: 'M64,0 L86,38 L58,76', color: '#1C69D4', x: 420, y: -490, rot: -125 },
+  // Purple — center V
+  { d: 'M58,76 L86,38', color: '#6B2D8B', x: -190, y: 590, rot: 75 },
+  { d: 'M86,38 L100,0 L114,38', color: '#6B2D8B', x: 680, y: 290, rot: -65 },
+  { d: 'M114,38 L142,76', color: '#6B2D8B', x: -370, y: -380, rot: 105 },
+  // Red — inner right
+  { d: 'M142,76 L114,38 L136,0', color: '#C1001F', x: 510, y: 490, rot: 55 },
+  { d: 'M136,0 L172,76', color: '#C1001F', x: -590, y: -290, rot: -135 },
+  // Red — outer right
+  { d: 'M172,76 L136,0 L162,0', color: '#C1001F', x: 290, y: -420, rot: 115 },
+  { d: 'M162,0 L200,76', color: '#C1001F', x: -390, y: 340, rot: -95 },
 ]
 
 export function LogoAssembly() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const stickyRef = useRef<HTMLDivElement>(null)
   const fragmentRefs = useRef<(SVGPathElement | null)[]>([])
+  const solidLogoRef = useRef<HTMLDivElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const logoGroupRef = useRef<SVGGElement>(null)
   const subtitleRef = useRef<HTMLDivElement>(null)
@@ -46,7 +48,7 @@ export function LogoAssembly() {
         },
       })
 
-      // 0–60%: Fragments fly into position
+      // 0–55%: Fragments fly from scattered positions into place
       fragmentRefs.current.forEach((frag, i) => {
         if (!frag) return
         const f = FRAGMENTS[i]
@@ -57,7 +59,7 @@ export function LogoAssembly() {
             y: f.y,
             rotation: f.rot,
             opacity: 0,
-            scale: 0.3,
+            scale: 0.2,
             transformOrigin: '50% 50%',
           },
           {
@@ -68,18 +70,31 @@ export function LogoAssembly() {
             scale: 1,
             ease: 'expo.out',
           },
-          i * 0.04
+          i * 0.035
         )
       })
 
-      // 60–75%: Logo blooms / glow pulse
+      // 50–58%: Fade out strokes, reveal solid filled logo
       if (logoGroupRef.current) {
+        tl.to(logoGroupRef.current, { opacity: 0, ease: 'power2.in' }, 0.50)
+      }
+      if (solidLogoRef.current) {
+        tl.fromTo(
+          solidLogoRef.current,
+          { opacity: 0, scale: 0.96 },
+          { opacity: 1, scale: 1, ease: 'power2.out' },
+          0.53
+        )
+      }
+
+      // 60–72%: Logo bloom / glow pulse
+      if (solidLogoRef.current) {
         tl.to(
-          logoGroupRef.current,
+          solidLogoRef.current,
           {
-            filter: 'drop-shadow(0 0 20px #1C69D4) drop-shadow(0 0 40px #6B2D8B)',
-            scale: 1.05,
-            duration: 0.08,
+            filter: 'drop-shadow(0 0 24px #1C69D4) drop-shadow(0 0 48px #6B2D8B)',
+            scale: 1.04,
+            duration: 0.06,
             ease: 'power2.inOut',
             yoyo: true,
             repeat: 1,
@@ -88,32 +103,23 @@ export function LogoAssembly() {
         )
       }
 
-      // 60–70%: Text "THE M DIVISION" reveals char by char
+      // 60–70%: Text character reveal
       if (textRef.current) {
         const chars = textRef.current.querySelectorAll('.char')
         tl.fromTo(
           chars,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, stagger: 0.015, ease: 'power3.out' },
-          0.6
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, stagger: 0.014, ease: 'power3.out' },
+          0.61
         )
       }
 
-      // 75–100%: Logo scales down to nav position
-      if (logoGroupRef.current) {
-        tl.to(
-          logoGroupRef.current,
-          { scale: 0.2, x: -380, y: -200, opacity: 0, ease: 'power2.inOut' },
-          0.8
-        )
+      // 80–100%: Logo + text fade out (transition to first chapter)
+      if (solidLogoRef.current) {
+        tl.to(solidLogoRef.current, { opacity: 0, scale: 0.92, ease: 'power2.inOut' }, 0.82)
       }
-
       if (subtitleRef.current) {
-        tl.to(
-          subtitleRef.current,
-          { opacity: 0, y: -20, ease: 'power2.inOut' },
-          0.82
-        )
+        tl.to(subtitleRef.current, { opacity: 0, y: -18, ease: 'power2.inOut' }, 0.83)
       }
     }, sectionRef)
 
@@ -135,17 +141,17 @@ export function LogoAssembly() {
         ref={stickyRef}
         className="sticky top-0 w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-black"
       >
-        {/* Subtle animated background gradient */}
+        {/* Subtle radial background */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse at 50% 60%, rgba(28,105,212,0.06) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at 50% 60%, rgba(28,105,212,0.05) 0%, transparent 70%)',
           }}
         />
 
-        {/* M logo SVG with fragments */}
+        {/* Fragment strokes — scatter / assemble animation */}
         <svg
-          viewBox="0 0 200 90"
+          viewBox="0 0 200 76"
           className="w-full max-w-[600px] md:max-w-[800px] lg:max-w-[1000px] relative z-10"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -157,28 +163,37 @@ export function LogoAssembly() {
                 key={i}
                 d={f.d}
                 stroke={f.color}
-                strokeWidth="18"
-                strokeLinecap="square"
+                strokeWidth="14"
+                strokeLinecap="butt"
                 strokeLinejoin="miter"
                 fill="none"
                 ref={el => { fragmentRefs.current[i] = el }}
               />
             ))}
-
-            {/* Solid filled M logo paths */}
-            {/* Blue left M fill */}
-            <path
-              d="M0 90 L40 0 L80 90 L60 90 L40 40 L20 90 Z"
-              fill="#1C69D4"
-              opacity="0"
-              ref={el => { /* handled via stroke paths */ }}
-            />
           </g>
         </svg>
 
-        {/* Full solid M logo (revealed on assembly) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <FullMLogo logoRef={logoGroupRef} />
+        {/* Solid filled logo — initially hidden, revealed after fragments assemble */}
+        <div
+          ref={solidLogoRef}
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{ opacity: 0 }}
+        >
+          <svg
+            viewBox="0 0 200 76"
+            className="w-full max-w-[600px] md:max-w-[800px] lg:max-w-[1000px]"
+            fill="none"
+            style={{ filter: 'drop-shadow(0 0 20px rgba(28,105,212,0.35))' }}
+            aria-label="BMW M Division logo"
+            role="img"
+          >
+            {/* Accurate BMW M tricolor — 5-path structure */}
+            <path d="M0,76 L38,0 L64,0 L28,76 Z" fill="#1C69D4" />
+            <path d="M28,76 L64,0 L86,38 L58,76 Z" fill="#1C69D4" />
+            <path d="M58,76 L86,38 L100,0 L114,38 L142,76 Z" fill="#6B2D8B" />
+            <path d="M142,76 L114,38 L136,0 L172,76 Z" fill="#C1001F" />
+            <path d="M172,76 L136,0 L162,0 L200,76 Z" fill="#C1001F" />
+          </svg>
         </div>
 
         {/* Title text */}
@@ -189,13 +204,11 @@ export function LogoAssembly() {
           <div
             ref={textRef}
             className="font-display font-bold text-4xl md:text-6xl lg:text-7xl tracking-[0.4em] text-white/90 uppercase"
-            style={{
-              textShadow: '2px 0 #C1001F, -2px 0 #1C69D4',
-            }}
+            style={{ textShadow: '2px 0 #C1001F, -2px 0 #1C69D4' }}
           >
             {splitText}
           </div>
-          <div className="font-mono text-xs tracking-[0.5em] text-white/30 mt-4 uppercase char">
+          <div className="font-mono text-xs tracking-[0.5em] text-white/30 mt-4 uppercase">
             50 Years · Motorsport DNA · Pure Precision
           </div>
         </div>
@@ -207,23 +220,5 @@ export function LogoAssembly() {
         </div>
       </div>
     </section>
-  )
-}
-
-function FullMLogo({ logoRef }: { logoRef: React.RefObject<SVGGElement> }) {
-  return (
-    <svg
-      viewBox="0 0 200 90"
-      className="w-full max-w-[600px] md:max-w-[800px] lg:max-w-[1000px]"
-      fill="none"
-      style={{ filter: 'drop-shadow(0 0 30px rgba(28,105,212,0.4))' }}
-      aria-hidden="true"
-    >
-      <path d="M0 90 L40 0 L80 90 L60 90 L40 40 L20 90 Z" fill="#1C69D4" />
-      <path d="M60 90 L80 40 L100 90 Z" fill="#6B2D8B" />
-      <path d="M80 90 L100 40 L120 90 Z" fill="#6B2D8B" />
-      <path d="M100 90 L120 40 L140 90 Z" fill="#6B2D8B" />
-      <path d="M120 90 L160 0 L200 90 L180 90 L160 40 L140 90 Z" fill="#C1001F" />
-    </svg>
   )
 }

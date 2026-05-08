@@ -89,25 +89,37 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
           0.15
         )
 
-        // Count up numbers
+      // Count up numbers — separate non-scrubbed trigger so numbers always go up, never reverse
+      if (statsRef.current) {
         const values = statsRef.current.querySelectorAll('[data-count]')
         values.forEach((el) => {
           const target = parseFloat(el.getAttribute('data-count') || '0')
           const suffix = el.getAttribute('data-suffix') || ''
-          const decimals = el.getAttribute('data-decimals') || '0'
-          const obj = { val: 0 }
-          tl.to(
-            obj,
-            {
-              val: target,
-              ease: 'power2.out',
-              onUpdate: () => {
-                el.textContent = obj.val.toFixed(parseInt(decimals)) + suffix
-              },
+          const decimals = parseInt(el.getAttribute('data-decimals') || '0')
+          const triggered = { done: false }
+          ScrollTrigger.create({
+            trigger: el,
+            start: 'top 85%',
+            once: true,
+            onEnter: () => {
+              if (triggered.done) return
+              triggered.done = true
+              const obj = { val: 0 }
+              gsap.to(obj, {
+                val: target,
+                duration: 1.0,
+                ease: 'power2.out',
+                onUpdate: () => {
+                  (el as HTMLElement).textContent = obj.val.toFixed(decimals) + suffix
+                },
+                onComplete: () => {
+                  (el as HTMLElement).textContent = target.toFixed(decimals) + suffix
+                },
+              })
             },
-            0.2
-          )
+          })
         })
+      }
       }
 
       // Scroll hint fades in then out

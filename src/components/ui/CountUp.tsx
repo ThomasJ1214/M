@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -11,34 +11,37 @@ interface CountUpProps {
   suffix?: string
   prefix?: string
   className?: string
-  triggerOnce?: boolean
 }
 
 export function CountUp({
   value,
-  duration = 0.8,
+  duration = 1.2,
   decimals = 0,
   suffix = '',
   prefix = '',
   className = '',
-  triggerOnce = true,
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null)
-  const [triggered, setTriggered] = useState(false)
+  const triggeredRef = useRef(false)
+  const animRef = useRef<gsap.core.Tween | null>(null)
 
   useEffect(() => {
-    if (!ref.current) return
     const el = ref.current
+    if (!el) return
+
+    // Reset on value change
+    triggeredRef.current = false
+    el.textContent = prefix + (0).toFixed(decimals) + suffix
 
     const st = ScrollTrigger.create({
       trigger: el,
-      start: 'top 85%',
-      once: triggerOnce,
+      start: 'top 88%',
+      once: true,
       onEnter: () => {
-        if (triggered && triggerOnce) return
-        setTriggered(true)
+        if (triggeredRef.current) return
+        triggeredRef.current = true
         const obj = { val: 0 }
-        gsap.to(obj, {
+        animRef.current = gsap.to(obj, {
           val: value,
           duration,
           ease: 'power2.out',
@@ -52,12 +55,15 @@ export function CountUp({
       },
     })
 
-    return () => st.kill()
-  }, [value, duration, decimals, suffix, prefix, triggerOnce, triggered])
+    return () => {
+      st.kill()
+      animRef.current?.kill()
+    }
+  }, [value, duration, decimals, suffix, prefix])
 
   return (
     <span ref={ref} className={className}>
-      {prefix}0{suffix}
+      {prefix}{(0).toFixed(decimals)}{suffix}
     </span>
   )
 }

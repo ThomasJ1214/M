@@ -1,11 +1,10 @@
-import { Suspense, useRef, useState, useCallback, useEffect } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Suspense, useRef, useState, useEffect } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
 import {
   OrbitControls,
   Environment,
   SpotLight,
   useGLTF,
-  PresentationControls,
 } from '@react-three/drei'
 import * as THREE from 'three'
 import { FallbackGeometry, type CarModelType } from './FallbackGeometry'
@@ -34,11 +33,11 @@ function GLBModel({ path, paintColor, scrollRotation, isExploded, onLoad }: Mode
         const mesh = child as THREE.Mesh
         meshes.push(mesh)
         originalPositions.current.set(mesh, mesh.position.clone())
-
-        // Apply paint color to main body
-        if (mesh.name.toLowerCase().includes('body') ||
-            mesh.name.toLowerCase().includes('paint') ||
-            mesh.name.toLowerCase().includes('exterior')) {
+        if (
+          mesh.name.toLowerCase().includes('body') ||
+          mesh.name.toLowerCase().includes('paint') ||
+          mesh.name.toLowerCase().includes('exterior')
+        ) {
           const mat = (mesh.material as THREE.MeshStandardMaterial).clone()
           mat.color.set(paintColor)
           mesh.material = mat
@@ -50,10 +49,9 @@ function GLBModel({ path, paintColor, scrollRotation, isExploded, onLoad }: Mode
     onLoad?.()
   }, [scene, paintColor, onLoad])
 
-  // Exploded view animation
   useEffect(() => {
     if (!bodyParts.current.length) return
-    bodyParts.current.forEach((mesh, i) => {
+    bodyParts.current.forEach((mesh) => {
       const orig = originalPositions.current.get(mesh)
       if (!orig) return
       if (isExploded) {
@@ -75,7 +73,6 @@ function GLBModel({ path, paintColor, scrollRotation, isExploded, onLoad }: Mode
     groupRef.current.rotation.y = baseRotation.current + scrollRotation * Math.PI * 2
   })
 
-  // Normalize model scale/position
   useEffect(() => {
     if (!scene || !groupRef.current) return
     const box = new THREE.Box3().setFromObject(scene)
@@ -101,7 +98,7 @@ function ModelScene({
   isExploded,
   orbitEnabled,
   modelType,
-  onLoad,
+  glbExists,
 }: {
   modelPath: string
   paintColor: string
@@ -109,9 +106,8 @@ function ModelScene({
   isExploded: boolean
   orbitEnabled: boolean
   modelType?: CarModelType
-  onLoad?: () => void
+  glbExists: boolean
 }) {
-  const [useFallback, setUseFallback] = useState(false)
   const groupRef = useRef<THREE.Group>(null)
   const baseRotation = useRef(0)
 
@@ -121,7 +117,7 @@ function ModelScene({
     groupRef.current.rotation.y = baseRotation.current + scrollRotation * Math.PI * 2
   })
 
-  if (useFallback) {
+  if (!glbExists) {
     return (
       <>
         <group ref={groupRef}>
@@ -144,7 +140,6 @@ function ModelScene({
           paintColor={paintColor}
           scrollRotation={scrollRotation}
           isExploded={isExploded}
-          onLoad={onLoad}
         />
       </Suspense>
       {orbitEnabled && <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />}
@@ -159,7 +154,6 @@ interface ModelViewerProps {
   height?: string | number
   interactive?: boolean
   modelType?: CarModelType
-  onScreenshot?: () => void
   className?: string
 }
 
@@ -174,8 +168,17 @@ export function ModelViewer({
 }: ModelViewerProps) {
   const [orbitEnabled, setOrbitEnabled] = useState(false)
   const [isExploded, setIsExploded] = useState(false)
+  const [glbExists, setGlbExists] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const orbitTimerRef = useRef<ReturnType<typeof setTimeout>>()
+
+  // Check if the GLB file actually exists before trying to load it
+  useEffect(() => {
+    setGlbExists(false)
+    fetch(modelPath, { method: 'HEAD' })
+      .then(r => setGlbExists(r.ok))
+      .catch(() => setGlbExists(false))
+  }, [modelPath])
 
   const handleHover = () => {
     if (!interactive) return
@@ -184,11 +187,7 @@ export function ModelViewer({
     orbitTimerRef.current = setTimeout(() => setOrbitEnabled(false), 3000)
   }
 
-  useIdleDetection(
-    30000,
-    () => {}, // idle — GSAP camera animation handled inside canvas
-    () => setOrbitEnabled(false)
-  )
+  useIdleDetection(30000, () => {}, () => setOrbitEnabled(false))
 
   const handleScreenshot = () => {
     if (!canvasRef.current) return
@@ -219,32 +218,11 @@ export function ModelViewer({
         style={{ background: 'transparent' }}
         aria-label="Interactive 3D BMW M car viewer"
       >
-        {/* Lighting Rig */}
         <ambientLight intensity={0.3} />
-        {/* Key light — upper right, white */}
-        <directionalLight
-          position={[5, 8, 3]}
-          intensity={2.5}
-          color="#ffffff"
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
-        {/* Fill light — lower left, blue-tinted */}
+        <directionalLight position={[5, 8, 3]} intensity={2.5} color="#ffffff" castShadow shadow-mapSize={[2048, 2048]} />
         <directionalLight position={[-4, -2, 2]} intensity={0.8} color="#4488ff" />
-        {/* Rim light — behind, M-red tinted */}
         <directionalLight position={[0, 2, -5]} intensity={1.2} color="#ff2244" />
-        {/* Ground spotlight */}
-        <SpotLight
-          position={[0, 8, 0]}
-          angle={0.4}
-          penumbra={0.6}
-          intensity={0.8}
-          color="#ffffff"
-          castShadow
-          attenuation={5}
-          anglePower={4}
-        />
-
+        <SpotLight position={[0, 8, 0]} angle={0.4} penumbra={0.6} intensity={0.8} color="#ffffff" castShadow attenuation={5} anglePower={4} />
         <Environment preset="studio" />
 
         <ModelScene
@@ -254,14 +232,23 @@ export function ModelViewer({
           isExploded={isExploded}
           orbitEnabled={orbitEnabled}
           modelType={modelType}
+          glbExists={glbExists}
         />
 
-        {/* Invisible ground plane for shadows */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.5, 0]} receiveShadow>
           <planeGeometry args={[20, 20]} />
           <shadowMaterial opacity={0.25} />
         </mesh>
       </Canvas>
+
+      {/* Coming Soon badge — shown when no GLB file is present */}
+      {!glbExists && (
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 pointer-events-none z-10">
+          <div className="font-mono text-[10px] tracking-[0.35em] uppercase text-white/25 border border-white/10 px-4 py-2 backdrop-blur-sm">
+            3D Model · Coming Soon
+          </div>
+        </div>
+      )}
 
       {interactive && (
         <div className="absolute bottom-6 left-6 flex gap-3 z-10">
