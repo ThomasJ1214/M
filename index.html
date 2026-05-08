@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Primary Meta -->
+    <title>BMW M Division — The Definitive M Car Showcase</title>
+    <meta name="description" content="The world's most comprehensive digital showcase of BMW M Division's legendary performance cars. From the iconic M1 to the modern M8, experience 50 years of motorsport-derived engineering." />
+    <meta name="keywords" content="BMW M, BMW M3, BMW M5, BMW M4, M Division, BMW Performance, motorsport" />
+
+    <!-- OG / Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://bmw-m-showcase.vercel.app/" />
+    <meta property="og:title" content="BMW M Division — The Definitive M Car Showcase" />
+    <meta property="og:description" content="Cinematic scroll-driven showcase of BMW's M Division. 50 years of performance. Every legend. One site." />
+    <meta property="og:image" content="/images/og-cover.webp" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="BMW M Division — The Definitive M Car Showcase" />
+    <meta property="twitter:description" content="Cinematic scroll-driven showcase of BMW's M Division." />
+    <meta property="twitter:image" content="/images/og-cover.webp" />
+
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <style>
+      /* Critical CSS — prevent FOUC */
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { background: #000; color: #F5F5F0; scroll-behavior: auto; }
+      body { overflow-x: hidden; cursor: none; }
+      #root { min-height: 100vh; }
+      .loading-screen {
+        position: fixed; inset: 0; background: #000;
+        display: flex; align-items: center; justify-content: center;
+        z-index: 99999; transition: opacity 0.6s ease;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

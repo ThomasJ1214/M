@@ -1,0 +1,53 @@
+:root {
+  /* Brand Colors */
+  --m-black: #000000;
+  --m-white: #F5F5F0;
+  --m-blue: #1C69D4;
+  --m-purple: #6B2D8B;
+  --m-red: #C1001F;
+  --m-gray-900: #0D0D0D;
+  --m-gray-700: #1A1A1A;
+  --m-gray-400: #666666;
+  --m-chrome: linear-gradient(135deg, #C0C0C0, #808080, #C0C0C0);
+  --m-stripe: linear-gradient(90deg, #1C69D4, #6B2D8B, #C1001F);
+
+  /* Typography */
+  --font-display: 'Barlow Condensed', 'Bebas Neue', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Font Sizes */
+  --fs-hero: clamp(80px, 15vw, 200px);
+  --fs-section: clamp(40px, 6vw, 96px);
+  --fs-subhead: clamp(24px, 3vw, 40px);
+  --fs-body: 18px;
+  --fs-mono: 14px;
+  --fs-label: 10px;
+
+  /* Spacing */
+  --sp-xs: 8px;
+  --sp-sm: 16px;
+  --sp-md: 32px;
+  --sp-lg: 64px;
+  --sp-xl: 128px;
+
+  /* Easing */
+  --ease-m: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-launch: cubic-bezier(0.0, 0.0, 0.2, 1.0);
+  --ease-brake: cubic-bezier(0.4, 0.0, 0.0, 1.0);
+
+  /* Z-Index */
+  --z-cursor: 99998;
+  --z-nav: 9999;
+  --z-modal: 10000;
+  --z-grain: 9997;
+
+  /* Nav */
+  --nav-height: 80px;
+  --nav-height-scrolled: 50px;
+}
+
+[data-theme="racing-red"] {
+  --m-blue: #C1001F;
+  --m-purple: #8B1A1A;
+}

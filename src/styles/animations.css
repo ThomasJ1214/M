@@ -1,0 +1,102 @@
+/* Grain overlay animation */
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+/* Cursor animations */
+@keyframes cursorEnter {
+  to { width: 40px; height: 40px; background: transparent; border: 1.5px solid rgba(255,255,255,0.8); }
+}
+
+@keyframes cursorLeave {
+  to { width: 12px; height: 12px; background: white; border: none; }
+}
+
+/* Blink cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* M stripe pulse */
+@keyframes stripePulse {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Chapter transition shutter */
+@keyframes shutterIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+@keyframes shutterOut {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+/* Count up pulse */
+@keyframes statReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Launch control flash */
+@keyframes launchFlash {
+  0% { opacity: 0; }
+  20% { opacity: 1; background: var(--m-red); }
+  40% { opacity: 0; }
+  60% { opacity: 0.7; background: var(--m-red); }
+  100% { opacity: 0; }
+}
+
+/* Burnout smoke for 404 */
+@keyframes smokeRise {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  100% { transform: translateY(-100px) scale(3); opacity: 0; }
+}
+
+/* Idle camera path (used via GSAP) */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* M logo glitch on hover */
+@keyframes glitch {
+  0% { clip-path: inset(0 0 98% 0); transform: skewX(0deg); }
+  10% { clip-path: inset(20% 0 60% 0); transform: skewX(-5deg); }
+  20% { clip-path: inset(60% 0 10% 0); transform: skewX(4deg); }
+  30% { clip-path: inset(10% 0 80% 0); transform: skewX(0deg); }
+  40% { clip-path: inset(80% 0 5% 0); transform: skewX(-3deg); }
+  50% { clip-path: inset(0 0 98% 0); transform: skewX(0deg); }
+  100% { clip-path: inset(0 0 0 0); transform: skewX(0deg); }
+}
+
+/* Nurburgring overlay fade */
+@keyframes nurbOverlay {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Screen shake for launch control */
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-4px, -2px); }
+  20% { transform: translate(4px, 2px); }
+  30% { transform: translate(-3px, 3px); }
+  40% { transform: translate(3px, -3px); }
+  50% { transform: translate(-2px, 2px); }
+  60% { transform: translate(2px, -1px); }
+  70% { transform: translate(-1px, 2px); }
+  80% { transform: translate(1px, -2px); }
+  90% { transform: translate(-1px, 0); }
+}
