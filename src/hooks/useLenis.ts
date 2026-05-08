@@ -12,7 +12,8 @@ export function getLenis() {
 }
 
 export function useLenis() {
-  const rafRef = useRef<number>(0)
+  // Store the exact function reference so cleanup can actually remove it
+  const tickerFnRef = useRef<((time: number) => void) | null>(null)
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -23,20 +24,20 @@ export function useLenis() {
     })
 
     lenisInstance = lenis
-
-    // Wire Lenis to GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update)
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
-    })
+    const tickerFn = (time: number) => lenis.raf(time * 1000)
+    tickerFnRef.current = tickerFn
+    gsap.ticker.add(tickerFn)
     gsap.ticker.lagSmoothing(0)
 
     return () => {
       lenis.destroy()
       lenisInstance = null
-      gsap.ticker.remove((time) => lenis.raf(time * 1000))
-      cancelAnimationFrame(rafRef.current)
+      if (tickerFnRef.current) {
+        gsap.ticker.remove(tickerFnRef.current)
+        tickerFnRef.current = null
+      }
     }
   }, [])
 }

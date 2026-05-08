@@ -6,6 +6,7 @@ import { Navbar } from '@/components/nav/Navbar'
 import { CustomCursor } from '@/components/ui/CustomCursor'
 import { useAppStore } from '@/store'
 import { useKonami } from '@/hooks/useKonami'
+import { getLenis } from '@/hooks/useLenis'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -37,10 +38,15 @@ function AppContent() {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  // Kill all ScrollTriggers on route change (prevents memory leaks)
+  // Kill all ScrollTriggers on route change, scroll to top via Lenis (not window.scrollTo)
   useEffect(() => {
     ScrollTrigger.getAll().forEach(st => st.kill())
-    window.scrollTo(0, 0)
+    const lenis = getLenis()
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true })
+    } else {
+      window.scrollTo(0, 0)
+    }
   }, [location.pathname])
 
   // Konami Code — Competition Mode
@@ -53,7 +59,8 @@ function AppContent() {
     <>
       <Navbar />
 
-      <AnimatePresence mode="wait">
+      {/* mode="sync" — both pages animate simultaneously, no black-screen gap */}
+      <AnimatePresence mode="sync">
         <Routes location={location} key={location.pathname}>
           <Route
             path="/"

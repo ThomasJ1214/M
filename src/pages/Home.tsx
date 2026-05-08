@@ -13,12 +13,13 @@ gsap.registerPlugin(ScrollTrigger)
 export function Home() {
   const { setLaunchControl, isCompetitionMode } = useAppStore()
   const flashRef = useRef<HTMLDivElement>(null)
+  const shakeRef = useRef<HTMLDivElement>(null)
   const scrollVelocity = useScrollVelocity()
   const launchCooldown = useRef(false)
 
-  // Launch control effect — fast scroll
+  // Launch control effect — only fires on very fast scroll (raised threshold to avoid accidental triggers)
   useEffect(() => {
-    if (scrollVelocity > 12 && !launchCooldown.current) {
+    if (scrollVelocity > 25 && !launchCooldown.current) {
       launchCooldown.current = true
       setLaunchControl(true)
 
@@ -28,10 +29,10 @@ export function Home() {
           { opacity: 0, display: 'block' },
           {
             keyframes: [
-              { opacity: 1, duration: 0.1 },
-              { opacity: 0, duration: 0.1 },
-              { opacity: 0.6, duration: 0.1 },
-              { opacity: 0, duration: 0.2 },
+              { opacity: 0.8, duration: 0.08 },
+              { opacity: 0, duration: 0.08 },
+              { opacity: 0.4, duration: 0.08 },
+              { opacity: 0, duration: 0.16 },
             ],
             onComplete: () => {
               setLaunchControl(false)
@@ -41,20 +42,26 @@ export function Home() {
         )
       }
 
-      // Screen shake
-      gsap.fromTo(
-        document.body,
-        { x: 0 },
-        {
-          keyframes: [
-            { x: -4, duration: 0.05 },
-            { x: 4, duration: 0.05 },
-            { x: -3, duration: 0.05 },
-            { x: 3, duration: 0.05 },
-            { x: 0, duration: 0.05 },
-          ],
-        }
-      )
+      // Screen shake — animate a wrapper div, NOT document.body
+      if (shakeRef.current) {
+        gsap.fromTo(
+          shakeRef.current,
+          { x: 0 },
+          {
+            keyframes: [
+              { x: -5, duration: 0.05 },
+              { x: 5, duration: 0.05 },
+              { x: -3, duration: 0.05 },
+              { x: 3, duration: 0.05 },
+              { x: 0, duration: 0.05 },
+            ],
+            onComplete: () => {
+              // Always clear the transform so content isn't permanently shifted
+              gsap.set(shakeRef.current!, { clearProps: 'x' })
+            },
+          }
+        )
+      }
 
       setTimeout(() => { launchCooldown.current = false }, 3000)
     }
@@ -70,6 +77,8 @@ export function Home() {
       data-competition={isCompetitionMode ? 'true' : undefined}
       id="main-content"
     >
+    {/* Shake wrapper — only this div moves during launch control, never body */}
+    <div ref={shakeRef}>
       {/* Skip to content link for a11y */}
       <a
         href="#model-chapters"
@@ -154,6 +163,7 @@ export function Home() {
         style={{ background: 'var(--m-red)', display: 'none' }}
         aria-hidden="true"
       />
+    </div>{/* end shakeRef */}
     </main>
   )
 }
