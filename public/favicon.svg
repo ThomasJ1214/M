@@ -1,13 +1,6 @@
 <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
   <rect width="32" height="32" rx="4" fill="#000"/>
-  <!-- Blue outer left -->
-  <path d="M1,31 L7.6,1 L12.8,1 L6.2,31 Z" fill="#1C69D4"/>
-  <!-- Blue inner left diagonal -->
-  <path d="M6.2,31 L12.8,1 L15.8,14.5 L11.2,31 Z" fill="#1C69D4"/>
-  <!-- White/silver center M peak -->
-  <path d="M11.2,31 L15.8,14.5 L16,1 L16.2,14.5 L20.8,31 Z" fill="#D8D8D8"/>
-  <!-- Red inner right diagonal -->
-  <path d="M20.8,31 L16.2,14.5 L19.2,1 L25.8,31 Z" fill="#C1001F"/>
-  <!-- Red outer right -->
-  <path d="M25.8,31 L19.2,1 L24.4,1 L31,31 Z" fill="#C1001F"/>
+  <path d="M18.2,7 L10.8,7 L0,25 L7.5,25 Z" fill="#619ED5"/>
+  <path d="M25.1,7 L18.2,7 L7.5,25 L14.4,25 Z" fill="#1C69D4"/>
+  <path d="M32,7 L25.1,7 L14.4,25 L21.4,25 Z" fill="#C1001F"/>
 </svg>

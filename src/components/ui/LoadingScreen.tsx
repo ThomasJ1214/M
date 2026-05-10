@@ -50,7 +50,7 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
           <div className="w-64 h-[3px] bg-white/10 relative overflow-hidden">
             <motion.div
               className="absolute inset-y-0 left-0"
-              style={{ background: 'linear-gradient(90deg, #1C69D4, #6B2D8B, #C1001F)' }}
+              style={{ background: 'linear-gradient(90deg, #1C69D4, #C1001F)' }}
               animate={{ width: `${progress}%` }}
               transition={{ ease: 'easeOut', duration: 0.1 }}
             />

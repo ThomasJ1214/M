@@ -3,7 +3,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { HelmetProvider } from 'react-helmet-async'
 import { Navbar } from '@/components/nav/Navbar'
-import { CustomCursor } from '@/components/ui/CustomCursor'
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import { useAppStore } from '@/store'
 import { useKonami } from '@/hooks/useKonami'
 import { getLenis } from '@/hooks/useLenis'
@@ -19,13 +19,15 @@ const NotFound = lazy(() => import('@/pages/NotFound').then(m => ({ default: m.N
 
 function PageSuspense({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="m-spinner" aria-label="Loading..." />
-      </div>
-    }>
-      {children}
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={
+        <div className="min-h-screen bg-black flex items-center justify-center">
+          <div className="m-spinner" aria-label="Loading..." />
+        </div>
+      }>
+        {children}
+      </Suspense>
+    </ErrorBoundary>
   )
 }
 
@@ -33,12 +35,11 @@ function AppContent() {
   const location = useLocation()
   const { setCompetitionMode, theme } = useAppStore()
 
-  // Apply theme to document
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
   }, [theme])
 
-  // Kill all ScrollTriggers on route change, scroll to top via Lenis (not window.scrollTo)
+  // Kill all ScrollTriggers on route change, scroll to top via Lenis
   useEffect(() => {
     ScrollTrigger.getAll().forEach(st => st.kill())
     const lenis = getLenis()
@@ -49,10 +50,10 @@ function AppContent() {
     }
   }, [location.pathname])
 
-  // Konami Code — Competition Mode
+  // Konami Code — Competition Mode 30s
   useKonami(() => {
     setCompetitionMode(true)
-    setTimeout(() => setCompetitionMode(false), 30000) // 30s competition mode
+    setTimeout(() => setCompetitionMode(false), 30000)
   })
 
   return (
@@ -95,12 +96,7 @@ function AppContent() {
 export function App() {
   return (
     <HelmetProvider>
-      {/* Grain overlay */}
       <div className="grain-overlay" aria-hidden="true" />
-
-      {/* Custom cursor — hidden on touch devices via CSS */}
-      <CustomCursor />
-
       <AppContent />
     </HelmetProvider>
   )
