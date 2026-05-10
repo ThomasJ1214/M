@@ -259,10 +259,10 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
           </div>
         </div>
 
-        {/* Right — 3D Canvas (60% width) */}
+        {/* 3D Canvas — bottom 45vh on mobile, right 60% on desktop, single instance */}
         <div
           ref={canvasRef}
-          className="hidden lg:block absolute right-0 top-0 bottom-0 w-[60%]"
+          className="absolute bottom-0 left-0 right-0 h-[45vh] lg:bottom-0 lg:top-0 lg:left-auto lg:right-0 lg:w-[60%] lg:h-full"
         >
           {canvasReady && (
             <HomepageScene
@@ -277,7 +277,7 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
           {/* Model watermark — M1 special */}
           {model.slug === 'm1' && (
             <div
-              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              className="absolute inset-0 hidden lg:flex items-center justify-center pointer-events-none"
               style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: 'clamp(100px, 20vw, 280px)',
@@ -290,19 +290,6 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
             >
               FIRST.<br />ALWAYS.
             </div>
-          )}
-        </div>
-
-        {/* Mobile canvas (full-width below stats) */}
-        <div className="lg:hidden absolute bottom-0 left-0 right-0 h-[45vh]">
-          {canvasReady && (
-            <HomepageScene
-              accentColor={model.accentColor}
-              scrollProgress={scrollProgress}
-              scaleProgress={scaleProgress}
-              opacityProgress={opacityProgress}
-              modelType={model.bodyType}
-            />
           )}
         </div>
       </div>

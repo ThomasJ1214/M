@@ -11,6 +11,7 @@ import { Gallery } from '@/components/model-page/Gallery'
 import { GenerationsTimeline } from '@/components/model-page/GenerationsTimeline'
 import { RelatedModels } from '@/components/model-page/RelatedModels'
 import { MStripe } from '@/components/ui/MStripe'
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 
 export function ModelPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -70,7 +71,16 @@ export function ModelPage() {
         <MStripe />
 
         {/* 2. Interactive 3D viewer with paint picker */}
-        <InteractiveViewer model={model} generation={activeGen} />
+        <ErrorBoundary fallback={
+          <div className="h-[80vh] bg-black flex items-center justify-center">
+            <div className="text-center">
+              <div className="font-display font-bold text-white/40 text-2xl tracking-[0.2em] uppercase mb-2">3D Viewer Unavailable</div>
+              <div className="font-mono text-xs text-white/20 tracking-widest">WebGL context could not be initialised</div>
+            </div>
+          </div>
+        }>
+          <InteractiveViewer model={model} generation={activeGen} />
+        </ErrorBoundary>
 
         <MStripe />
 
