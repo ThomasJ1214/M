@@ -65,30 +65,19 @@ export function LoadingScreen({ onComplete }: LoadingScreenProps) {
   )
 }
 
-/** Accurate BMW M Division tricolor logo SVG */
+/** BMW M Division logo — renders the real uploaded SVG */
 export function MLogo({ size = 60, className = '' }: { size?: number; className?: string }) {
-  const h = Math.round(size * 0.38)
+  // Real SVG aspect ratio: 57.977619 / 20.957119 ≈ 2.766
+  const height = Math.round(size / 2.766)
   return (
-    <svg
+    <img
+      src="/images/bmw-m-logo.svg"
       width={size}
-      height={h}
-      viewBox="0 0 200 76"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+      height={height}
+      alt="BMW M Division logo"
       className={className}
-      aria-label="BMW M Division logo"
-      role="img"
-    >
-      {/* Blue — outer left stroke */}
-      <path d="M0,76 L38,0 L64,0 L28,76 Z" fill="#1C69D4" />
-      {/* Blue — inner left diagonal */}
-      <path d="M28,76 L64,0 L86,38 L58,76 Z" fill="#1C69D4" />
-      {/* Purple — center V */}
-      <path d="M58,76 L86,38 L100,0 L114,38 L142,76 Z" fill="#6B2D8B" />
-      {/* Red — inner right diagonal */}
-      <path d="M142,76 L114,38 L136,0 L172,76 Z" fill="#C1001F" />
-      {/* Red — outer right stroke */}
-      <path d="M172,76 L136,0 L162,0 L200,76 Z" fill="#C1001F" />
-    </svg>
+      draggable={false}
+      style={{ display: 'block' }}
+    />
   )
 }

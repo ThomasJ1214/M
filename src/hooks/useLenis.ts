@@ -17,10 +17,11 @@ export function useLenis() {
 
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.07,
-      duration: 1.4,
+      lerp: 0.12,
+      duration: 1.1,
       smoothWheel: true,
-      touchMultiplier: 2,
+      touchMultiplier: 2.5,
+      wheelMultiplier: 1.2,
     })
 
     lenisInstance = lenis

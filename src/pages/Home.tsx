@@ -1,21 +1,58 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { LogoAssembly } from '@/components/homepage/LogoAssembly'
 import { ModelChapter } from '@/components/homepage/ModelChapter'
 import { MStripe } from '@/components/ui/MStripe'
+import { Toast } from '@/components/ui/Toast'
 import { models, homepageOrder } from '@/data/models'
 import { useAppStore } from '@/store'
 import { useScrollVelocity } from '@/hooks/useScrollProgress'
+import { useKeySequence } from '@/hooks/useKeySequence'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function Home() {
-  const { setLaunchControl, isCompetitionMode } = useAppStore()
+  const { setLaunchControl, isCompetitionMode, setCompetitionMode } = useAppStore()
   const flashRef = useRef<HTMLDivElement>(null)
   const shakeRef = useRef<HTMLDivElement>(null)
   const scrollVelocity = useScrollVelocity()
   const launchCooldown = useRef(false)
+  const [toast, setToast] = useState<{ msg: string; sub?: string } | null>(null)
+
+  const showToast = useCallback((msg: string, sub?: string) => {
+    setToast({ msg, sub })
+  }, [])
+
+  // Easter egg: type "MPOWER" → engine surge + toast
+  useKeySequence('mpower', useCallback(() => {
+    showToast('M POWER.', 'Sheer Driving Pleasure')
+    setCompetitionMode(true)
+    setTimeout(() => setCompetitionMode(false), 8000)
+    if (flashRef.current) {
+      gsap.fromTo(
+        flashRef.current,
+        { opacity: 0, display: 'block' },
+        {
+          keyframes: [
+            { opacity: 0.3, duration: 0.1 },
+            { opacity: 0, duration: 0.2 },
+          ],
+          onComplete: () => { if (flashRef.current) flashRef.current.style.display = 'none' },
+        }
+      )
+    }
+  }, [showToast, setCompetitionMode]))
+
+  // Easter egg: type "GTS" → special GTS mode message
+  useKeySequence('gts', useCallback(() => {
+    showToast('GTS MODE', 'Track-only. No limits.')
+  }, [showToast]))
+
+  // Easter egg: type "1972" → M Division founding year
+  useKeySequence('1972', useCallback(() => {
+    showToast('BORN 1972', 'The legend begins.')
+  }, [showToast]))
 
   // Launch control effect — only fires on very fast scroll (raised threshold to avoid accidental triggers)
   useEffect(() => {
@@ -164,6 +201,15 @@ export function Home() {
         aria-hidden="true"
       />
     </div>{/* end shakeRef */}
+
+    {/* Easter egg toasts */}
+    {toast && (
+      <Toast
+        message={toast.msg}
+        sub={toast.sub}
+        onDone={() => setToast(null)}
+      />
+    )}
     </main>
   )
 }

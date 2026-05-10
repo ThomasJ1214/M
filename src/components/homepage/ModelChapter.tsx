@@ -25,9 +25,22 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [scaleProgress, setScaleProgress] = useState(0.6)
   const [opacityProgress, setOpacityProgress] = useState(0)
+  // Canvas only mounts when this section enters the viewport (300px margin)
+  const [canvasReady, setCanvasReady] = useState(index === 0)
   const [showNurb, setShowNurb] = useState(false)
 
   const featuredGen = model.generations[model.featuredGenIndex]
+
+  // Lazy-mount Canvas when section approaches viewport
+  useEffect(() => {
+    if (index === 0 || !sectionRef.current) return
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setCanvasReady(true) },
+      { rootMargin: '400px' }
+    )
+    obs.observe(sectionRef.current)
+    return () => obs.disconnect()
+  }, [index])
 
   useEffect(() => {
     if (!sectionRef.current || !stickyRef.current) return
@@ -251,13 +264,15 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
           ref={canvasRef}
           className="hidden lg:block absolute right-0 top-0 bottom-0 w-[60%]"
         >
-          <HomepageScene
-            accentColor={model.accentColor}
-            scrollProgress={scrollProgress}
-            scaleProgress={scaleProgress}
-            opacityProgress={opacityProgress}
-            modelType={model.bodyType}
-          />
+          {canvasReady && (
+            <HomepageScene
+              accentColor={model.accentColor}
+              scrollProgress={scrollProgress}
+              scaleProgress={scaleProgress}
+              opacityProgress={opacityProgress}
+              modelType={model.bodyType}
+            />
+          )}
 
           {/* Model watermark — M1 special */}
           {model.slug === 'm1' && (
@@ -280,13 +295,15 @@ export function ModelChapter({ model, index }: ModelChapterProps) {
 
         {/* Mobile canvas (full-width below stats) */}
         <div className="lg:hidden absolute bottom-0 left-0 right-0 h-[45vh]">
-          <HomepageScene
-            accentColor={model.accentColor}
-            scrollProgress={scrollProgress}
-            scaleProgress={scaleProgress}
-            opacityProgress={opacityProgress}
-            modelType={model.bodyType}
-          />
+          {canvasReady && (
+            <HomepageScene
+              accentColor={model.accentColor}
+              scrollProgress={scrollProgress}
+              scaleProgress={scaleProgress}
+              opacityProgress={opacityProgress}
+              modelType={model.bodyType}
+            />
+          )}
         </div>
       </div>
     </section>

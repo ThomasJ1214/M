@@ -5,24 +5,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 /**
- * 10 filled fragments — each is exactly one half (split at y=38) of the 5 BMW M tricolor paths.
- * When assembled at position (0,0) they form the complete, accurate BMW M logo.
- * No stroke-to-fill swap needed — the assembled fragments ARE the logo.
- *
- * Logo viewBox: 0 0 200 76
- * Paths (5 fills):
- *   Blue outer left:  M0,76 L38,0 L64,0 L28,76 Z
- *   Blue inner left:  M28,76 L64,0 L86,38 L58,76 Z
- *   Purple center:    M58,76 L86,38 L100,0 L114,38 L142,76 Z
- *   Red inner right:  M142,76 L114,38 L136,0 L172,76 Z
- *   Red outer right:  M172,76 L136,0 L162,0 L200,76 Z
- *
- * Split points at y=38 (midpoint of 76px height):
- *   Blue outer left  → (19,38) and (46,38)
- *   Blue inner left  → (46,38) and (86,38)    [86,38 is already a vertex]
- *   Purple center    → (86,38) and (114,38)   [both already vertices]
- *   Red inner right  → (114,38) and (154,38)  [114,38 is already a vertex]
- *   Red outer right  → (154,38) and (181,38)
+ * 10 filled fragments matching the real BMW M logo geometry.
+ * Blue stripes (left), white/silver peak (center), red stripes (right).
+ * Assembled viewBox: 0 0 200 76
  */
 const FRAGMENTS = [
   // Blue outer left — top half
@@ -33,10 +18,10 @@ const FRAGMENTS = [
   { d: 'M64,0 L86,38 L46,38 Z', fill: '#1C69D4', x: 360, y: -540, rot: -105 },
   // Blue inner left — bottom half
   { d: 'M28,76 L46,38 L86,38 L58,76 Z', fill: '#1C69D4', x: -260, y: 510, rot: 125 },
-  // Purple center — top peak (the V)
-  { d: 'M86,38 L100,0 L114,38 Z', fill: '#6B2D8B', x: 10, y: -620, rot: -5 },
-  // Purple center — bottom trapezoid
-  { d: 'M58,76 L86,38 L114,38 L142,76 Z', fill: '#6B2D8B', x: 0, y: 620, rot: 5 },
+  // White/silver center peak — top (matches real BMW M logo silver divider)
+  { d: 'M86,38 L100,0 L114,38 Z', fill: '#D8D8D8', x: 10, y: -620, rot: -5 },
+  // White/silver center — bottom trapezoid
+  { d: 'M58,76 L86,38 L114,38 L142,76 Z', fill: '#C4C4C4', x: 0, y: 620, rot: 5 },
   // Red inner right — top half
   { d: 'M114,38 L136,0 L154,38 Z', fill: '#C1001F', x: 260, y: -510, rot: 105 },
   // Red inner right — bottom half
@@ -52,6 +37,7 @@ export function LogoAssembly() {
   const stickyRef = useRef<HTMLDivElement>(null)
   const fragmentRefs = useRef<(SVGPathElement | null)[]>([])
   const logoSvgRef = useRef<SVGSVGElement>(null)
+  const realLogoRef = useRef<HTMLImageElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
   const subtitleRef = useRef<HTMLDivElement>(null)
 
@@ -69,7 +55,7 @@ export function LogoAssembly() {
         },
       })
 
-      // 0–60%: All 10 fragments fly from scattered positions into their exact logo positions
+      // 0–60%: All 10 fragments fly from scattered positions into logo positions
       fragmentRefs.current.forEach((frag, i) => {
         if (!frag) return
         const f = FRAGMENTS[i]
@@ -81,7 +67,7 @@ export function LogoAssembly() {
             rotation: f.rot,
             opacity: 0,
             scale: 0.15,
-            transformOrigin: '100px 38px', // center of logo viewBox
+            transformOrigin: '100px 38px',
           },
           {
             x: 0,
@@ -91,17 +77,16 @@ export function LogoAssembly() {
             scale: 1,
             ease: 'expo.out',
           },
-          // Stagger: outer pieces arrive first (more dramatic), center last
           i * 0.04
         )
       })
 
-      // 58–65%: Assembled logo glows
+      // 58–65%: Assembled logo glows, real logo fades in on top
       if (logoSvgRef.current) {
         tl.to(
           logoSvgRef.current,
           {
-            filter: 'drop-shadow(0 0 18px #1C69D4) drop-shadow(0 0 36px #6B2D8B) drop-shadow(0 0 8px #C1001F)',
+            filter: 'drop-shadow(0 0 16px #1C69D4) drop-shadow(0 0 32px rgba(193,0,31,0.6)) drop-shadow(0 0 6px #fff)',
             scale: 1.03,
             transformOrigin: '50% 50%',
             ease: 'power2.inOut',
@@ -111,6 +96,19 @@ export function LogoAssembly() {
           },
           0.59
         )
+      }
+
+      // Crossfade to real logo at 60–65%
+      if (realLogoRef.current) {
+        tl.fromTo(
+          realLogoRef.current,
+          { opacity: 0 },
+          { opacity: 1, ease: 'power2.inOut', duration: 0.05 },
+          0.60
+        )
+      }
+      if (logoSvgRef.current) {
+        tl.to(logoSvgRef.current, { opacity: 0, duration: 0.04 }, 0.60)
       }
 
       // 62–72%: "THE M DIVISION" text characters reveal
@@ -124,9 +122,9 @@ export function LogoAssembly() {
         )
       }
 
-      // 80–100%: Logo + subtitle fade out upward (prepare for first model chapter)
-      if (logoSvgRef.current) {
-        tl.to(logoSvgRef.current, { opacity: 0, y: -30, ease: 'power2.inOut' }, 0.82)
+      // 80–100%: Logo + subtitle fade out upward
+      if (realLogoRef.current) {
+        tl.to(realLogoRef.current, { opacity: 0, y: -30, ease: 'power2.inOut' }, 0.82)
       }
       if (subtitleRef.current) {
         tl.to(subtitleRef.current, { opacity: 0, y: -18, ease: 'power2.inOut' }, 0.84)
@@ -159,19 +157,14 @@ export function LogoAssembly() {
           }}
         />
 
-        {/**
-         * Single SVG — all 10 filled fragments start scattered (opacity:0, rotated, displaced)
-         * and GSAP animates them to x:0 y:0 rot:0, forming the complete BMW M logo.
-         * No separate "reveal" component needed — the assembled fragments ARE the logo.
-         */}
+        {/* Fragment animation SVG — replaced by real logo on crossfade */}
         <svg
           ref={logoSvgRef}
           viewBox="0 0 200 76"
           className="w-full max-w-[480px] md:max-w-[700px] lg:max-w-[900px] relative z-10"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          aria-label="BMW M Division logo"
-          role="img"
+          aria-hidden="true"
         >
           {FRAGMENTS.map((f, i) => (
             <path
@@ -182,6 +175,16 @@ export function LogoAssembly() {
             />
           ))}
         </svg>
+
+        {/* Real BMW M logo — fades in after fragments assemble */}
+        <img
+          ref={realLogoRef}
+          src="/images/bmw-m-logo.svg"
+          alt="BMW M Division logo"
+          className="absolute w-full max-w-[480px] md:max-w-[700px] lg:max-w-[900px] z-10"
+          style={{ opacity: 0 }}
+          draggable={false}
+        />
 
         {/* Title text — below logo */}
         <div

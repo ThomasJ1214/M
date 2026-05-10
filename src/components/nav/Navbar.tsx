@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { useAppStore } from '@/store'
 import { MLogo } from '@/components/ui/LoadingScreen'
+import { Toast } from '@/components/ui/Toast'
 import { MobileMenu } from './MobileMenu'
 import { models } from '@/data/models'
 
@@ -14,9 +15,12 @@ export function Navbar() {
   const logoRef = useRef<HTMLDivElement>(null)
   const { isMuted, toggleMute, theme, toggleTheme, isNavScrolled, setNavScrolled, setMobileMenuOpen } = useAppStore()
   const [showMore, setShowMore] = useState(false)
+  const [navToast, setNavToast] = useState<string | null>(null)
   const location = useLocation()
   const navigate = useNavigate()
   const lastScrollY = useRef(0)
+  const logoClickRef = useRef(0)
+  const logoClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Scroll-driven height shrink
   useEffect(() => {
@@ -47,6 +51,15 @@ export function Navbar() {
   }
 
   const handleLogoClick = () => {
+    // Easter egg: 5 rapid clicks on the logo
+    logoClickRef.current++
+    if (logoClickTimer.current) clearTimeout(logoClickTimer.current)
+    logoClickTimer.current = setTimeout(() => { logoClickRef.current = 0 }, 1500)
+    if (logoClickRef.current >= 5) {
+      logoClickRef.current = 0
+      setNavToast('M IS NOT JUST A LETTER. IT\'S A LEGEND.')
+    }
+
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
@@ -196,6 +209,14 @@ export function Navbar() {
       </nav>
 
       <MobileMenu />
+
+      {navToast && (
+        <Toast
+          message={navToast}
+          sub="BMW M Division"
+          onDone={() => setNavToast(null)}
+        />
+      )}
     </>
   )
 }
